@@ -43,9 +43,15 @@ db.sequelize.sync().then(() => {
         });
         
         socket.on("sendTurn", (data) => {
+            console.log(data);
             socket.broadcast.emit("emitSendTurn", data);
         });
 
+
+        socket.on("leaveRoom", (room) => {
+            console.log(`${socket.id} left room ${room}`);
+            socket.leave(room);
+        });
 
         socket.on("disconnect", () => {
             console.log("User " + socket.id + " disconnected");
