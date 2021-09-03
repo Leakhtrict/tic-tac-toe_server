@@ -48,7 +48,7 @@ db.sequelize.sync().then(() => {
         
         socket.on("sendTurn", (data) => {
             console.log(data);
-            socket.to(roomName).emit("emitSendTurn", data);
+            socket.broadcast.to(roomName).emit("emitSendTurn", data);
         });
 
 
