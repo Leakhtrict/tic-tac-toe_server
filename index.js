@@ -19,11 +19,29 @@ db.sequelize.sync().then(() => {
     });
 
     io.on("connection", socket => {
-        socket.on("connection", () => {
-            console.log("User " + socket.id + " connected");
+        console.log("User " + socket.id + " connected");
+
+        socket.on("joinRoom", (room) => {
+            const players = io.sockets.adapter.rooms.get(room);
+            const numPlayers = players ? players.size : 0;
+            if(numPlayers === 0){
+                socket.join(room);
+                socket.emit("created");
+                console.log("User " + socket.id + " Joined Room: " + room);
+            } else if(numPlayers === 1){
+                socket.join(room);
+                socket.emit("joined");
+                console.log("User " + socket.id + " Joined Room: " + room);
+                io.sockets.in(room).emit('ready');
+            } else{
+                socket.emit('full');
+            }
         });
 
-
+        socket.on("startGame", (data) => {
+            socket.broadcast.emit("emitStartGame", data);
+        });
+        
         socket.on("sendTurn", (data) => {
             socket.broadcast.emit("emitSendTurn", data);
         });

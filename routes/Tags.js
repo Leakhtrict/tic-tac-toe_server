@@ -22,7 +22,7 @@ router.post("/addTags", (req, res) => {
 router.post("/removeTags", (req, res) => {
     const selectedTags = req.body;
     selectedTags.map( async (val) => {
-        await Tags.increment({ count: -1 }, { where: { tagName: val.label } })
+        await Tags.increment({ count: -1 }, { where: { tagName: val } })
     });
     res.json("removed tags successfully");
 });

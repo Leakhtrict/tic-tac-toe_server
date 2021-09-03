@@ -9,12 +9,13 @@ router.get("/", async (req, res) => {
 
 router.post("/createGame", async (req, res) => {
     const game = req.body;
-    await Games.create(game);
-    res.json(game);
+    const createdGame = await Games.create(game);
+    res.json(createdGame);
 });
 
-router.delete("/deleteGame", async (req, res) => {
-    await Games.destroy({ where: { id: req.body.id }});
+router.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+    await Games.destroy({ where: { id: id }});
     res.json("deleted game successfully");
 });
 
