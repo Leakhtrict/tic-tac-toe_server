@@ -22,8 +22,10 @@ db.sequelize.sync().then(() => {
 
     io.on("connection", socket => {
         console.log("User " + socket.id + " connected");
+        let roomName = "";
 
         socket.on("joinRoom", (room) => {
+            roomName = room;
             const players = io.sockets.adapter.rooms.get(room);
             const numPlayers = players ? players.size : 0;
             if(numPlayers === 0){
@@ -46,7 +48,7 @@ db.sequelize.sync().then(() => {
         
         socket.on("sendTurn", (data) => {
             console.log(data);
-            socket.broadcast.emit("emitSendTurn", data);
+            socket.to(roomName).emit("emitSendTurn", data);
         });
 
 
